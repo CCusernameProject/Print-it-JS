@@ -14,16 +14,18 @@ const slides = [
     {
         "image": "assets/images/slideshow/slide4.png",
         "tagLine": "<p>Autocollants <span>avec découpe laser sur mesure</span></p>"
-    }
-];
+    },
+    list_dot = []
+]
+const left_arrow = document.getElementById("arrow_left");
+const right_arrow = document.getElementById("arrow_right");
+const dots_div = document.getElementById("dots_div");
+let imagesPages = document.getElementById("images");
+let text = document.getElementById("textImages");
+let actualChange = 0;
 
 // Fonction qui permet de changé l'image, le texte et le dot.
-let actualChange = 0;
-function changeElement(side) {
-    // Récupération des éléments par l'id.
-    let imagesPages = document.getElementById("images");
-    let list_dot = document.querySelectorAll(".dot");
-    let text = document.getElementById("textImages")
+const changeElement = (side) => {
     // Vérification si c'est "right" ou "left".
     if (side === "right") {
         list_dot[actualChange].classList.remove('dot_selected');
@@ -31,32 +33,45 @@ function changeElement(side) {
         if (actualChange > 3) {
             actualChange = 0;
         };
-        imagesPages.setAttribute("src", slides[actualChange].image);
-        list_dot[actualChange].classList.add('dot_selected');
-        text.innerHTML = slides[actualChange].tagLine
-    } else if (side === "left") {
+        changeElement2(actualChange)
+    } else {
         list_dot[actualChange].classList.remove('dot_selected');
         actualChange--;
         if (actualChange < 0) {
             actualChange = 3;
         };
-        imagesPages.setAttribute("src", slides[actualChange].image);
-        list_dot[actualChange].classList.add('dot_selected');
-        text.innerHTML = slides[actualChange].tagLine
+        changeElement2(actualChange)
     }
 }
 
-const left_arrow = document.getElementById("arrow_left");
-const right_arrow = document.getElementById("arrow_right");
+// Fonction pour changé les éléments
+const changeElement2 = (changeNumber) => {
+    imagesPages.setAttribute("src", slides[changeNumber].image);
+    list_dot[changeNumber].classList.add('dot_selected');
+    text.innerHTML = slides[changeNumber].tagLine
+}
+
+// Ajout des dots selon le nombre d'image
+for (let i = 0; i < (slides.length - 1); i++) {
+    const spanDots = document.createElement('span');
+    dots_div.appendChild(spanDots);
+    if(i === 0) {
+        spanDots.classList.add('dot')
+        spanDots.classList.add('dot_selected')
+        list_dot.push(spanDots)
+    } else {
+        spanDots.classList.add('dot')
+        list_dot.push(spanDots)
+    }
+}
+
 
 // Ajout d'event au click sur la flèche de droite.
 right_arrow.addEventListener("click", () => {
-    let side = "right"
-    changeElement(side)
+    changeElement("right")
 })
 
 // Ajout d'event au click sur la flèche de gauche.
 left_arrow.addEventListener("click", () => {
-    let side = "left"
-    changeElement(side)
+    changeElement()
 })
